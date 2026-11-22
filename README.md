@@ -2,7 +2,7 @@
 
 AstrBot 原生 Python 插件，提供多音源点歌、歌词、MV、分享解析、演出票务和本地图卡。插件对接已部署的 `qqmusic-api-enhanced`，**不需要 Node.js、Karin、浏览器或远程渲染服务**，但仍需要能访问音乐 API。
 
-仓库：<https://github.com/zaras123/astrbot_plugin_qqmusic_enhanced>
+仓库：<https://github.com/zaras123/astrbot_plugin_qqmusic_ref>
 
 纯 Python 重构已完成，功能未与 Karin 版完全对齐。未迁移项见[迁移差异](#迁移差异)。
 
@@ -12,7 +12,7 @@ AstrBot 原生 Python 插件，提供多音源点歌、歌词、MV、分享解�
 
 ## 安装
 
-1. 用 **AstrBot 4.29.4** 和 **Python 3.12+**。将 ZIP 内的 `astrbot_plugin_qqmusic_enhanced` 目录解压到 AstrBot 的 `data/plugins/`。从 Git 安装时直接使用本仓库默认分支；本仓库只放 AstrBot 插件。若旧目录 `astrbot_plugin_qqmusic` 还在，请先删除旧目录，避免市场版与旧版同时加载。
+1. 用 **AstrBot 4.29.4** 和 **Python 3.12+**。将 ZIP 内的 `astrbot_plugin_qqmusic_ref` 目录解压到 AstrBot 的 `data/plugins/`。从 Git 安装时直接使用本仓库默认分支；本仓库只放 AstrBot 插件。若旧目录 `astrbot_plugin_qqmusic` 或 `astrbot_plugin_qqmusic_enhanced` 还在，请先删除旧目录，避免市场版与旧版同时加载。
 2. 用 **AstrBot 正在使用的 Python 环境**安装插件的 `requirements.txt`，然后在插件管理页加载或重载。
 3. 在插件配置填写 `apiBase`（不重定向的最终地址）与 `apiToken`（后端启用鉴权时填写，不要发到群里）。管理员先发 `#qqm测试`，再用 `#qqm点歌 晴天`、`#qqm听1` 验证搜索和投递。
 4. 试听与部分音频转换需宿主机安装 FFmpeg 并加入 PATH；普通卡片渲染不需要 FFmpeg。

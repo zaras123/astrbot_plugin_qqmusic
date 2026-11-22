@@ -5,7 +5,7 @@ from runpy import run_path
 from zipfile import ZIP_DEFLATED, ZipFile
 
 ROOT = Path(__file__).resolve().parents[1]
-NAME = "astrbot_plugin_qqmusic_enhanced"
+NAME = "astrbot_plugin_qqmusic_ref"
 FILES = """__init__.py main.py api.py astrbot_transport.py cards.py delivery.py
 features.py quality.py render.py updater.py library_web.py _conf_schema.json
 metadata.yaml requirements.txt logo.png LICENSE README.md CHANGELOG.md""".split()

@@ -94,7 +94,7 @@ class QQMusicPlugin(FeatureCommands, Star):
         self._renderer = Renderer()
         self._jobs = None
         self._state_lock = asyncio.Lock()
-        self._data_dir = Path(StarTools.get_data_dir("astrbot_plugin_qqmusic_enhanced")).resolve()
+        self._data_dir = Path(StarTools.get_data_dir("astrbot_plugin_qqmusic_ref")).resolve()
         self._library_jobs = {}
         self._library_tasks = set()
         qqapi.set_config_getter(self._cfg)

@@ -23,14 +23,14 @@ async def smoke():
     await db_helper.initialize()
     await sp.initialize()
     manager = PluginManager(SimpleNamespace(get_all_stars=lambda: tuple(star_map.values())), astrbot_config)
-    name = "astrbot_plugin_qqmusic_enhanced"
+    name = "astrbot_plugin_qqmusic_ref"
     module = f"data.plugins.{name}.main"
     try:
         ok, error = await manager.load(specified_dir_name=name)
         assert ok, error
         loaded = star_map[module]
         first = loaded.star_cls
-        from data.plugins.astrbot_plugin_qqmusic_enhanced.updater import get_local_version
+        from data.plugins.astrbot_plugin_qqmusic_ref.updater import get_local_version
 
         assert "v" + get_local_version(Path(loaded.module.__file__).parent) == loaded.version
         assert loaded.short_desc and "多音源点歌" in loaded.short_desc

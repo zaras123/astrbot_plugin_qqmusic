@@ -15,7 +15,7 @@ from . import api as qqapi
 from .astrbot_transport import ProactiveEvent
 from .delivery import deliver_song
 
-PLUGIN_NAME = "astrbot_plugin_qqmusic_enhanced"
+PLUGIN_NAME = "astrbot_plugin_qqmusic_ref"
 ROUTE = f"/{PLUGIN_NAME}/library"
 
 _ID_RE = re.compile(r"^lib_[A-Za-z0-9]+$")
