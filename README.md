@@ -4,12 +4,6 @@
 
 <h1 align="center">qqmusic-plugin</h1>
 
-> [!WARNING]
-> **⛔ 本插件已停止维护，不再接受任何功能更新与 Bug 修复。**
-> 网易云、QQ、酷狗等音乐点歌功能已整合进新的聚合插件，请前往新项目安装使用：
-> 👉 **[astrbot_plugin_music_hub](https://github.com/wbndmqaq/astrbot_plugin_music_hub)**
-
-> 从 Yunzai-Bot [qqmusic-plugin](https://github.com/zaras123/qqmusic-plugin) 移植而来的 AstrBot 版本
 
 ---
 
