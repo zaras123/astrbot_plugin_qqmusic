@@ -29,7 +29,7 @@ from astrbot import __version__ as astrbot_version
 from astrbot.api import message_components as C
 from astrbot.core.star.star_handler import EventType, star_handlers_registry
 
-NAME = "astrbot_plugin_qqmusic"
+NAME = "astrbot_plugin_qqmusic_enhanced"
 if NAME not in sys.modules:
     spec = importlib.util.spec_from_file_location(NAME, ROOT / "__init__.py", submodule_search_locations=[str(ROOT)])
     package = importlib.util.module_from_spec(spec)

@@ -16,7 +16,7 @@ if not os.environ.get("ASTRBOT_ROOT"):
     runtime.mkdir(parents=True, exist_ok=True)
     os.environ["ASTRBOT_ROOT"] = str(runtime)
 
-NAME = "astrbot_plugin_qqmusic"
+NAME = "astrbot_plugin_qqmusic_enhanced"
 if NAME not in sys.modules:
     spec = importlib.util.spec_from_file_location(
         NAME, ROOT / "__init__.py", submodule_search_locations=[str(ROOT)]

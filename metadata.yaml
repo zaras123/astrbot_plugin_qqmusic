@@ -1,4 +1,4 @@
-name: astrbot_plugin_qqmusic
+name: astrbot_plugin_qqmusic_enhanced
 display_name: "QQ音乐点歌/解析插件"
 short_desc: 多音源点歌、歌词、MV、演出票务，支持本地图卡。
 desc: |
@@ -6,7 +6,7 @@ desc: |
   内置中文卡片渲染，无需浏览器；语音、视频与文件按适配器能力投递。
 version: v2.1.18
 author: zaras123
-repo: https://github.com/zaras123/astrbot_plugin_qqmusic
+repo: https://github.com/zaras123/astrbot_plugin_qqmusic_enhanced
 astrbot_version: ">=4.29.4,<5"
 support_platforms:
   - aiocqhttp
