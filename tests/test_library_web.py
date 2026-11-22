@@ -53,13 +53,15 @@ class LibraryWebTests(unittest.IsolatedAsyncioTestCase):
     async def test_web_palette_matches_card_theme(self):
         light = library_web.qqrender.web_palette({"uiTheme": "classic", "uiDark": "浅色"})
         self.assertFalse(light["dark"])
-        self.assertEqual(light["brand"], "#087756")
+        self.assertEqual(light["brand"], "#0f8f63")
+        self.assertEqual(light["style"], "classic")
         dark = library_web.qqrender.web_palette({"uiTheme": "apple", "uiDark": "深色"})
         self.assertTrue(dark["dark"])
-        self.assertEqual(dark["brand"], "#ff8bb8")
+        self.assertEqual(dark["brand"], "#2997ff")
+        self.assertEqual(dark["style"], "apple")
         fallback = library_web.qqrender.web_palette({"uiTheme": "missing", "uiDark": "浅色"})
         self.assertEqual(fallback["theme"], "classic")
-        self.assertEqual(fallback["brand"], "#087756")
+        self.assertEqual(fallback["brand"], "#0f8f63")
 
     async def test_public_item_and_targets(self):
         item = library_web._public_item({

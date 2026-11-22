@@ -4,6 +4,18 @@ import re
 import time
 from urllib.parse import urlparse
 
+SOURCE_LABELS = {
+    "qq": "QQ",
+    "netease": "网易云",
+    "kugou": "酷狗",
+    "kuwo": "酷我",
+    "bilibili": "B站",
+    "qishui": "汽水",
+    "migu": "咪咕",
+    "apple": "Apple",
+    "youtube": "YouTube",
+}
+
 # ──────────── 会话存储 ────────────
 
 
@@ -260,6 +272,9 @@ def build_list_card_data(
                 "duration": s.get("duration") or "",
                 "payplay": bool(s.get("payplay")),
                 "hasMv": bool(s.get("mvVid")),
+                "source": str(s.get("source") or "qq").lower(),
+                "sourceLabel": s.get("sourceLabel")
+                or SOURCE_LABELS.get(str(s.get("source") or "qq").lower(), "QQ"),
             }
             for i, s in enumerate(songs)
         ],
