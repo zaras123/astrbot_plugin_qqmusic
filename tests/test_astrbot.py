@@ -14,7 +14,7 @@ from datetime import datetime
 from io import BytesIO
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import AsyncMock, Mock
+from unittest.mock import AsyncMock, Mock, patch
 from PIL import Image as PillowImage
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -203,6 +203,13 @@ class AstrBotTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn("测试曲", e.text)
         self.assertIn("netease", [call[2].get("source") for call in self.calls if call[1] == "/search"])
 
+    async def test_lyric_card_accepts_search_metadata(self):
+        self.config.update(renderListCard=False)
+        e = FakeEvent("#qqm歌词 晴天")
+        await self.star.get_lyric(e)
+        self.assertIn("测试歌词", e.text)
+        self.assertNotIn("歌词失败", e.text)
+
     async def test_qr_commands_separate_web_qq_and_app(self):
         self.star._start_webqr_poll = Mock()
         self.star._start_poll = Mock()
@@ -278,6 +285,44 @@ class AstrBotTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(RuntimeError):
             await delivery.download_audio(self.base + "/bad", self.tmp.name, "bad")
         self.assertFalse(list(Path(self.tmp.name).glob("*.part")))
+
+    async def test_file_upload_falls_back_to_onebot_upload_action(self):
+        self.config.update(
+            sendVocal=False,
+            uploadFile=True,
+            sendTextInfo=False,
+            renderListCard=False,
+            keepFileSec=0,
+        )
+        event = FakeEvent("", platform="aiocqhttp", group="12345")
+        song = {
+            "songmid": "testMID001",
+            "songName": "文件测试",
+            "singerName": "歌手",
+            "interval": 1,
+            "source": "qq",
+        }
+        play = {"url": self.base + "/audio", "quality": "128", "raw": {}, "userKey": "u"}
+        calls = []
+
+        async def fake_onebot(ev, action, params):
+            calls.append((action, params))
+            return {"retcode": 0}
+
+        with patch.object(delivery, "onebot", side_effect=fake_onebot), patch.object(
+            self.star, "_send_chain", AsyncMock(side_effect=RuntimeError("file segment unsupported"))
+        ):
+            result = await delivery.deliver_song(
+                self.star,
+                event,
+                song,
+                play,
+                cfg=self.config,
+                plugin_dir=self.tmp.name,
+            )
+        self.assertTrue(result["ok"])
+        self.assertEqual(calls[0][0], "upload_group_file")
+        self.assertTrue(calls[0][1]["file"].endswith(".wav"))
 
     async def test_local_audio_retries_official_without_writing(self):
         e = FakeEvent()
