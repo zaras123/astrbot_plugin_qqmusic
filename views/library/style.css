@@ -1,5 +1,6 @@
 :root {
   --bg: #f5f7fb;
+  --bg-2: #eef3fb;
   --panel: #ffffff;
   --panel-2: #f8fafc;
   --text: #172033;
@@ -7,6 +8,7 @@
   --line: #dce3ee;
   --brand: #31c27c;
   --brand-2: #159a5b;
+  --brand-text: #052e1c;
   --danger: #d92d20;
   --warn: #b54708;
   --shadow: 0 12px 34px rgba(22, 34, 51, 0.08);
@@ -15,6 +17,7 @@
 
 [data-theme="dark"] {
   --bg: #0d1117;
+  --bg-2: #111827;
   --panel: #161b22;
   --panel-2: #1b222c;
   --text: #e6edf3;
@@ -22,6 +25,7 @@
   --line: #2b3442;
   --brand: #3ddc97;
   --brand-2: #2bb978;
+  --brand-text: #04150d;
   --danger: #ff6b6b;
   --warn: #f5b544;
   --shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
@@ -35,9 +39,9 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(1200px 500px at 15% -10%, rgba(49, 194, 124, 0.16), transparent 60%),
-    radial-gradient(900px 500px at 100% 0%, rgba(70, 120, 255, 0.12), transparent 55%),
-    var(--bg);
+    radial-gradient(1200px 500px at 15% -10%, color-mix(in srgb, var(--brand) 18%, transparent), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, color-mix(in srgb, var(--brand-2) 14%, transparent), transparent 55%),
+    linear-gradient(135deg, var(--bg), var(--bg-2));
   color: var(--text);
   font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
 }
@@ -161,7 +165,7 @@ input:focus,
 select:focus,
 textarea:focus {
   border-color: var(--brand);
-  box-shadow: 0 0 0 3px rgba(49, 194, 124, 0.16);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 20%, transparent);
 }
 
 textarea {
@@ -194,11 +198,7 @@ textarea {
 
 .btn.primary {
   background: linear-gradient(135deg, var(--brand), var(--brand-2));
-  color: #052e1c;
-}
-
-[data-theme="dark"] .btn.primary {
-  color: #04150d;
+  color: var(--brand-text);
 }
 
 .btn.ghost {

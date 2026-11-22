@@ -12,6 +12,7 @@ from astrbot.api import logger
 from astrbot.api.web import error_response, json_response, request
 
 from . import api as qqapi
+from . import render as qqrender
 from .astrbot_transport import ProactiveEvent
 from .delivery import deliver_song
 
@@ -309,6 +310,10 @@ async def _groups_handler(plugin):
     return json_response({"platforms": rows})
 
 
+async def _theme_handler(plugin):
+    return json_response(qqrender.web_palette(plugin._cfg()))
+
+
 async def _search_handler(plugin):
     if plugin._cfg().get("localLibrary", True) is False:
         return error_response("本地曲库开关已关闭", status_code=400)
@@ -407,6 +412,10 @@ def register_web_api(plugin):
     register(
         f"{ROUTE}/groups", lambda: _groups_handler(plugin), ["GET"],
         "List connected platforms and groups",
+    )
+    register(
+        f"{ROUTE}/theme", lambda: _theme_handler(plugin), ["GET"],
+        "Read the card/WebUI theme palette",
     )
     register(
         f"{ROUTE}/search", lambda: _search_handler(plugin), ["GET"],

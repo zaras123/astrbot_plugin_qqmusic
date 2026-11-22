@@ -138,6 +138,30 @@ def _palette(cfg):
     return theme[0], theme[1], theme[2], "#ffffff", "#f5f8fc", "#14263a", "#485b70", "#e3eaf2"
 
 
+def web_palette(cfg):
+    """Return the same palette used by cards for the plugin WebUI."""
+    cfg = cfg or {}
+    theme_name = str(cfg.get("uiTheme") or "classic")
+    if theme_name not in THEMES:
+        theme_name = "classic"
+    mode = cfg.get("uiDark")
+    dark = mode == "深色" or (mode == "自动" and not 6 <= datetime.now().hour < 18)
+    start, end, accent, panel, panel2, text, muted, line = _palette(cfg)
+    return {
+        "theme": theme_name,
+        "mode": str(mode or "浅色"),
+        "dark": dark,
+        "bg": start,
+        "bg2": end,
+        "brand": accent,
+        "panel": panel,
+        "panel2": panel2,
+        "text": text,
+        "muted": muted,
+        "line": line,
+    }
+
+
 def _font(cfg, size):
     for candidate in (
         str(cfg.get("renderFontPath") or ""), str(FONT),

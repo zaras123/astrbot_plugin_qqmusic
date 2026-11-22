@@ -6,6 +6,7 @@ const state = {
   items: [],
   selectedItems: new Set(),
   selectedTargets: new Map(),
+  theme: null,
   jobId: "",
   pollTimer: 0,
   sending: false,
@@ -24,6 +25,47 @@ function formatDuration(seconds) {
 
 function setBusy(button, busy) {
   if (button) button.disabled = Boolean(busy);
+}
+
+function contrastColor(hex) {
+  const value = String(hex || "").replace("#", "");
+  if (!/^[0-9a-f]{6}$/i.test(value)) return "#052e1c";
+  const rgb = [0, 2, 4].map((offset) => parseInt(value.slice(offset, offset + 2), 16) / 255);
+  const linear = rgb.map((channel) =>
+    channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4
+  );
+  const luminance = 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+  return luminance > 0.55 ? "#052e1c" : "#ffffff";
+}
+
+function applyTheme(theme) {
+  if (!theme || typeof theme !== "object") return;
+  state.theme = theme;
+  const root = document.documentElement;
+  root.dataset.theme = theme.dark ? "dark" : "light";
+  const vars = {
+    "--bg": theme.bg,
+    "--bg-2": theme.bg2,
+    "--panel": theme.panel,
+    "--panel-2": theme.panel2,
+    "--text": theme.text,
+    "--muted": theme.muted,
+    "--line": theme.line,
+    "--brand": theme.brand,
+    "--brand-2": theme.brand,
+    "--brand-text": contrastColor(theme.brand),
+  };
+  for (const [key, value] of Object.entries(vars)) {
+    if (value) root.style.setProperty(key, value);
+  }
+}
+
+async function loadTheme() {
+  try {
+    applyTheme(await bridge.apiGet("library/theme"));
+  } catch (error) {
+    console.warn("读取插件主题失败，沿用 AstrBot 面板主题", error);
+  }
 }
 
 function showError(message) {
@@ -365,7 +407,9 @@ async function main() {
     renderResults();
   });
   el("send").addEventListener("click", sendSelected);
-  await Promise.all([loadGroups(), search()]);
+  bridge.onContext(() => applyTheme(state.theme));
+  await Promise.all([loadGroups(), loadTheme(), search()]);
+  window.setInterval(loadTheme, 5 * 60 * 1000);
 }
 
 main().catch((error) => showError(error.message || String(error)));
