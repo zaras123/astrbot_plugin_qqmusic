@@ -1,5 +1,21 @@
-__pycache__/
-*.pyc
+# 旧分支可能在本机留下依赖、配置；不跟踪也不删除本机数据。
+node_modules/
+config/config/*
+*.log
+.DS_Store
+.playwright-mcp/
+.serena/
+
+# 本地 AI 助手配置：settings.local.json 里硬编码着本机 API Token，不要提交
+.claude/settings.local.json
+# 本地测试环境和输出
+temp/
 data/
+
+# AstrBot/Python development
+__pycache__/
+*.py[cod]
 .pytest_cache/
 .ruff_cache/
+.venv/
+output/astrbot/

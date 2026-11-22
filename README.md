@@ -1,289 +1,93 @@
-<p align="center">  
-  <img src="resources/img/logo.png" width="120" alt="logo">
-</p>
+# QQ 音乐 · AstrBot
 
-<h1 align="center">qqmusic-plugin</h1>
+AstrBot 原生 Python 插件，提供多音源点歌、歌词、MV、分享解析、演出票务和本地图卡。插件对接已部署的 `qqmusic-api-enhanced`，**不需要 Node.js、Karin、浏览器或远程渲染服务**，但仍需要能访问音乐 API。
 
+仓库：<https://github.com/zaras123/astrbot_plugin_qqmusic>
 
----
+纯 Python 重构已完成，功能未与 Karin 版完全对齐。未迁移项见[迁移差异](#迁移差异)。
 
-## 功能一览
+## 版本记录
 
-| 分类 | 指令 | 说明 |
-|------|------|------|
-| 🎵 点歌 | `#qqm点歌 关键词` | 搜索列表，`#qqm听N` 选曲播放 |
-| 🎵 点歌 | `#qqm播放 关键词` | 直接播放第一条 |
-| 🎵 点歌 | `#qqm听所有` | 连播当前列表（最多 30 首） |
-| 🎵 点歌 | `#qqm歌词 关键词 / 链接 / 序号` | 歌词查询（支持 songDetail 链接与序号取当前列表歌词） |
-| 🎵 点歌 | `#qqm热搜` | 热搜榜 |
-| 🎵 点歌 | `#qqm帮助` | 帮助图片卡片 |
-| 🎬 MV | `#qqmMV 搜索 关键词` | 搜索 MV 列表 |
-| 🎬 MV | `#qqmMV 播放 序号` / `#qqmMV 下载 序号` | 播放 / 下载列表第 N 个 MV（写成 `播放/下载 序号` 会被当 vid，请分开写） |
-| 🎬 MV | `#qqmMV 分类 [序号/分类名]` | 不带参数列出 MV 分类；点歌后再发 `#qqmMV 播放` 直接操作本曲 MV |
-| 🎧 发现 | `#qqm排行 榜单名` | 排行榜（飙升/热歌/新歌等） |
-| 🎧 发现 | `#qqm新歌` | 新歌速递（1内地 2欧美 3日本 4韩国 5最新 6港台） |
-| 🎧 发现 | `#qqm推荐` | 热门推荐歌单 |
-| 🎧 发现 | `#qqm推荐听 序号` | 打开推荐列表中第 N 个歌单的歌曲 |
-| 🎧 发现 | `#qqm来首歌` / `#qqm随机` / `#qqm放一首` / `#qqm来一首` | 随机推荐一首并播放 |
-| 🎧 发现 | `#qqm电台` | 个性电台 5 首 |
-| 🎧 发现 | `#qqm日推` | 每日推荐（需登录） |
-| 🎧 发现 | `#qqm收藏` | 我的收藏（需登录） |
-| 🎧 发现 | `#qqm歌手 关键词` | 搜索歌手，展示热门歌曲 |
-| 🎧 发现 | `#qqm专辑 关键词` | 搜索专辑，展示曲目列表 |
-| 🎧 发现 | `#qqm歌单 关键词` | 搜索歌单，展示歌曲 |
-| 🎧 发现 | `#qqm评论 关键词` | 查看歌曲热门评论 |
-| 🔗 解析 | 群内发 QQ 音乐分享 / 链接 | 自动识别并下载播放 |
-| 🔗 解析 | 专辑 / 歌单 / 歌手链接 | 自动识别并展示歌曲列表 |
-| 🔐 登录 | `#qqm登录` | 无感扫码，一张 QQ 码覆盖 QQ / QQ音乐 App（主人，主通道） |
-| 🔐 登录 | `#qqm登录微信` | 无感扫码（微信码，备用） |
-| 🔐 登录 | `#qqm登录qq` | QQ音乐 App 扫码（备用通道） |
-| 🔐 登录 | `#qqm绑定 qqmusic://...` | DeepLink 导入（主人） |
-| 🔐 登录 | `#qqm导入 qqmusic://...` | 等价于 `#qqm绑定`；直接发 qqmusic:// 链接也会自动导入 |
-| 🔐 登录 | `#qqm状态` / `#qms` | 登录状态卡片 |
-| 🔐 登录 | `#qqm登出` | 清除登录态（主人） |
-| 🔐 登录 | `#qqm同步` | 从 API 侧同步登录态到插件配置（主人） |
-| 🔐 登录 | `#qqm刷新` | 续期 key（主人） |
-| ⚙️ 配置 | `#qqm设置` | 查看当前配置 |
-| ⚙️ 配置 | `#qqm api <地址>` | 设置 API 地址（主人） |
-| ⚙️ 配置 | `#qqm 音质 flac` | 设置最高音质（主人） |
-| ⚙️ 配置 | `#qqm 开启点歌` / `#qqm 关闭点歌` | 功能开关（点歌/解析，注意「开启」与目标之间**不能加空格**）（主人） |
-| ⚙️ 配置 | `#qqm 测试` | 测试 API 连通（主人） |
-| ⚙️ 配置 | `#qqm 账号` | 已登录账号列表（主人） |
+见 [更新日志](CHANGELOG.md)。AstrBot 插件管理中可查看完整记录，管理员也可发送 **#qqm更新日志** 查看当前安装版本的更新内容。
 
----
+## 安装
 
-### 音质选项
+1. 用 **AstrBot 4.29.4** 和 **Python 3.12+**。将 ZIP 内的 `astrbot_plugin_qqmusic` 目录解压到 AstrBot 的 `data/plugins/`。从 Git 安装时直接使用本仓库默认分支；本仓库只放 AstrBot 插件。
+2. 用 **AstrBot 正在使用的 Python 环境**安装插件的 `requirements.txt`，然后在插件管理页加载或重载。
+3. 在插件配置填写 `apiBase`（不重定向的最终地址）与 `apiToken`（后端启用鉴权时填写，不要发到群里）。管理员先发 `#qqm测试`，再用 `#qqm点歌 晴天`、`#qqm听1` 验证搜索和投递。
+4. 试听与部分音频转换需宿主机安装 FFmpeg 并加入 PATH；普通卡片渲染不需要 FFmpeg。
 
-`128` / `m4a` / `320` / `flac` / `ape` / `hires` / `atmos` / `master` / `atmos_master`
+### 常用配置
 
-默认 `auto`：自动匹配歌曲最高可用音质，支持逐级降级。
-
-> 📌 **关于高音质（FLAC 以上）**：`hires` / `atmos` / `master` / `atmos_master` 是 **QQ 音乐绿钻会员限定**，且部分歌曲未上架这些音质。若显式设置了高音质却被降级，点歌卡片会直接标明原因（如「API 未返回链接（通常需绿钻会员）」即账号非会员；「该歌曲未提供此音质」即歌曲本身没出该档）。
-
-> 📌 **关于语音发送**：FLAC 等高音质文件直接作为语音消息会被协议端以体积/格式拒绝，插件发送语音前会自动用 **ffmpeg** 压成紧凑 mp3（需系统安装 ffmpeg，`ffmpeg -version` 可验证；缺失时自动回退原始文件）。若 **PC QQ 播放不了高清语音**，可在管理面板开启「禁用高清语音」（`disableHighQualityVocal`），语音改发 mono16k 低音质，PC 可正常播放；群文件仍保留高音质。
-
----
-
-## 安装&配置API教程
-
-### 1.安装
-
-AstrBot WebUI → 插件管理 → 搜索 `astrbot_plugin_qqmusic` → 安装。
-
-
-重启 AstrBot，日志出现加载即成功
-
-### 2. 配置 API
-
-本插件需要配合后端 API 使用。API 不开源，需自行解决（或者去用户群申请）。
-
-**API 端前置条件**（不满足会连不上或被拒，插件只负责把错误原文转达）：
-
-| 项 | 说明 |
+| 目标 | 要改什么 |
 | --- | --- |
-| 监听端口 | 由 `PORT` / `QQMUSIC_PORT` 决定，API 项目默认 `3300`；`apiBase` 按你实际部署填，如 `http://127.0.0.1:3300` |
-| 主密钥 | `QQMUSIC_API_TOKEN` 必须设置；插件侧 `apiToken` 填同一个值，不一致会被鉴权拒绝 |
-| IP 白名单 | `QQMUSIC_ALLOW_IPS`（逗号分隔）。插件与 API 不同机时，务必把插件所在机器的出口 IP 加进去，否则 403 |
-| 限流 | `QQMUSIC_RATE_LIMIT`，默认 120/min/IP，超限后短时间内请求会被拒 |
+| 开启第三方音源 | 打开 `unlockV2`，并在 `enabledSources` 中加入所需来源，例如 `netease`；具体可用性取决于 API 和账号。 |
+| 控制图片卡 | `renderListCard` 控制出图，`imageFormat` 选 PNG/JPEG，`uiTheme` 和 `uiDark` 切换配色与明暗。绘制或图片投递失败时可降级为文本。 |
+| 封面和生僻字 | Pillow 默认离线绘图，内置 Noto Sans SC 中文字体子集。`renderCover` 可选用公开 CDN 封面，`renderFontPath` 可指定本机字体。 |
+| 控制媒体投递 | `sendVocal`、`uploadFile` 分别控制语音和文件；`sendNativeCard` 只在 OneBot V11 有对应路径。 |
 
-在 AstrBot 管理面板的「插件配置」中填写：
-- **API 地址**（apiBase）
-- **API Token**（apiToken，与 API 端 `QQMUSIC_API_TOKEN` 一致）
+音源偏好、统计、订阅和定时任务存入 AstrBot 的插件 KV；媒体临时文件默认保存在插件数据目录，不写回插件源码目录。
 
-或主人发送：`#qqm api <地址>`。
+## 本地曲库 WebUI
 
-### 3. 登录
+在 AstrBot 插件详情页打开「本地曲库点歌」视图：搜索 API 本地曲库，勾选歌曲和已连接平台的群聊，即可直接投递原文件。页面只拿曲库 ID 和元数据，带 token 的音频地址由插件后端重新获取；发送任务在后台执行，页面会显示每首歌到每个群的结果。适合一次补发/群发，不依赖群里先发命令。
 
-主人发送 `#qqm登录` 无感扫码即可开始使用（一张 QQ 码，QQ / QQ音乐 App 通用；微信场景用 `#qqm登录微信`，QQ音乐 App 备用通道 `#qqm登录qq`）。
+## 命令
 
----
+| 功能 | 示例 |
+| --- | --- |
+| 点歌、播放、选曲 | #qqm点歌 晴天、#qqm听1、#qqm播放 晴天 |
+| 歌词、试听、歌词海报 | #qqm歌词1、#qqm试听1、#qqm海报1 |
+| 热搜、发现 | #qqm热搜、#qqm排行、#qqm新歌、#qqm推荐、#qqm电台、#qqm日推、#qqm收藏 |
+| 歌手/专辑/歌单/评论 | #qqm歌手 周杰伦、#qqm专辑 范特西、#qqm歌单 关键词、#qqm评论 晴天 |
+| MV | #qqmMV 搜索 周杰伦、#qqmMV 播放1、#qqmMV 下载1 |
+| 多音源 | 配置启用后，#qqm平台、#qqm平台状态、#qqm源 网易、#qqm酷狗播放 晴天 |
+| 分享解析 | QQ 音乐链接和分享卡；Spotify / Apple Music 分享由 API 匹配可播放歌曲 |
+| QQ 音乐登录 | 管理员私聊 `#qqm登录` 获取 QQ 码；`#qqm登录微信`、`#qqm登录qq`、`#qqm登录app` 走 QQ 音乐 App 通道；`#qqm状态` 查看状态 |
+| 平台凭据 | #qqm登录帮助；第三方扫码或凭据仅私聊；不要在群里发送凭据 |
+| 账号操作 | #qqm账号操作；写操作需要管理员私聊，并以「确认」结尾 |
+| 演出/票务 | #qqm演唱会、#qqm演出 城市=北京、#qqm演出详情1、#qqm演出下一页 |
+| 订阅/定时 | 群管理员 #qqm订阅 歌手、#qqm定时 20:00 晴天；#qqm订阅列表、#qqm定时列表 |
+| 统计/勋章 | #qqm听歌、#qqm听歌榜 本周、#qqm听歌状态、#qqm勋章 |
+| 设置/更新 | `#qqm设置`、`#qqm界面 深色`；管理员可用 `#qqm更新日志` 查看当前版本，更新和重载在 AstrBot 插件管理执行 |
 
-## 用户群
+点歌按 AstrBot 实例、会话、用户隔离，个人最近列表优先，无个人列表时退回本会话最新列表。点击播放或收到文件不代表用户实际听完；插件本地统计只记录成功走过音频投递路径的曲目时长。票务按用户会话单独存储，历史演出仅覆盖 API 已归档记录。
 
-API申请QQ群：[点击加入](https://qm.qq.com/q/GKxEVvF8Ua)
-bug反馈QQ群：[点击加入](https://qm.qq.com/q/8sOZdZTnaw)
+## 适配器
 
-- API 地址和 Token 申请
-- 使用问题反馈
-- 更新通知
+覆盖 AstrBot 4.29.4 的 18 个内置适配器及第三方 iCQQ。旧版插件列出的 8 个适配器（OneBot V11、QQ 官方、Telegram、钉钉、飞书、KOOK、Discord、个人微信）均在覆盖范围内。
 
----
+下表描述本插件根据 [AstrBot 4.29.4 平台适配器源码](https://github.com/AstrBotDevs/AstrBot/tree/v4.29.4/astrbot/core/platform/sources) 选择的投递路径，不代表对应媒体已经在真实账号上发出。账号权限、文件大小、公网文件服务及被动回复配额仍由平台限制。
 
-## 卡片渲染
+| 适配器 | 文本与图片外的媒体路线 |
+| --- | --- |
+| OneBot V11 (aiocqhttp) | 语音、视频、文件；仅在该适配器走原生 QQ 音乐卡 |
+| QQ 官方 / QQ 官方 Webhook | 语音、视频、文件，合并回复并优先首个成功媒体 |
+| Telegram、Discord、飞书、钉钉、KOOK、Mattermost、Misskey、Satori、WebChat | 按适配器发送语音、视频、文件 |
+| 企业微信 / 企业微信智能机器人 | 框架有语音、视频、文件组件；主动推送能力由实例提供 |
+| 个人微信 | 视频、文件；跳过语音 |
+| 微信公众号 | 语音；文件/视频回退来源页面 |
+| LINE | 语音和视频需要可公开访问的 AstrBot 文件服务；公网文件服务未配置时不能保证媒体投递 |
+| Slack | 语音、文件；不直发 Video，MV 可转文件 |
+| 第三方 iCQQ | 标准语音、视频、文件；具体由安装的适配器处理 |
+| 其他第三方适配器 | 标准文本和图片；不假定支持媒体，回退来源链接 |
 
-自 v1.5.0 起卡片渲染改为**本地 Playwright** 截图。（不自动安装，需要图片卡片时请按下面步骤手动安装（约 1~2 分钟）。）
+不把内网 API、鉴权 Token 或带签名参数的音频 URL 作为文本发到群。原生卡/媒体能否播放、扫码能否成功、定时消息能否主动发送，以实际平台、账号和 API 版本为准。
 
-### ① 安装 playwright Python 包
+## 迁移差异
 
-```bash
-pip install playwright
-# 国内网络可用清华镜像：
-pip install playwright -i https://pypi.tuna.tsinghua.edu.cn/simple
-```
+| Karin 功能 | AstrBot 当前行为 |
+| --- | --- |
+| QQ 群「一起听」 | **未迁移**。AstrBot 公共适配器不提供房间控制接口。 |
+| 平台听歌时长上报任务 | **未迁移**。仅保留本地投递统计、官方时长与勋章只读查询。 |
+| 损坏曲库文件修复 | 本地音频下载或格式校验失败时，符合条件的 QQ 曲目会尝试改用官方音源；**不会自动覆盖**后端曲库文件。 |
+| 主题与 WebUI | 用 Pillow 重绘卡片，设置采用 AstrBot 原生配置 Schema；不复刻 Karin 的主题细节、背景或 WebUI 控件。 |
 
-### ② 下载 Chromium 浏览器内核
+- 从 Karin 或旧 Python 移植升级：账号槽按 AstrBot 适配器实例和用户隔离，原账号槽不会被误当成当前登录；需要本人重新登录或显式配置公共播放账号。
+- Python 基线来自 [wbndm 的 AstrBot 移植](https://github.com/wbndmqaq/astrbot_plugin_qqmusic)，保留其 [MIT 声明](astrbot_assets/LICENSE-WBNDM)。
 
-```bash
-python -m playwright install chromium
-# 国内网络可用 npmmirror 加速：
-PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/ python -m playwright install chromium
-```
+## 验证与发布
 
-Windows PowerShell 写法：
+已在 Python 3.12.13、AstrBot 4.29.4 上通过本地回归。安装包解压后验证了真实框架加载、重载、帮助图片和后台更新日志。适配器测试使用模拟事件验证消息组件和降级，**未逐平台验收真实账号扫码和语音、视频、文件实发**。
 
-```powershell
-$env:PLAYWRIGHT_DOWNLOAD_HOST="https://npmmirror.com/mirrors/playwright/"
-python -m playwright install chromium
-```
-
-### ③（仅 Linux / Docker 容器）安装系统运行库
-
-仅当启动渲染时报 `libnspr4` / `libnss3` / `error while loading shared libraries` 才需要，需 root：
-
-```bash
-python -m playwright install-deps chromium
-```
-
-或手动安装系统库：
-
-```bash
-apt-get update && apt-get install -y \
-  libnspr4 libnss3 libgbm1 libasound2 \
-  libatk-bridge2.0-0 libatk1.0-0 libcairo2 libcups2 libdrm2 \
-  libx11-xcb1 libxcb1 libxcomposite1 libxdamage1 libxfixes3 \
-  libxkbcommon0 libxrandr2 libxext6 libpango-1.0-0
-```
-
-容器内 apt 官方源下载慢？可选换阿里镜像源后再装：
-
-```bash
-# Debian 12 (bookworm)
-sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources
-# Ubuntu 22.04
-sed -i 's|archive.ubuntu.com|mirrors.aliyun.com|g' /etc/apt/sources.list
-apt-get update
-```
-
-### ④ 重载插件
-
-WebUI → 插件管理 → 本插件 → 重载。
-
-环境未就绪时，日志会输出一次上述完整教程，所有指令自动回退纯文本展示，不影响点歌/解析/播放功能；安装完成后重载即可正常出图。
-
----
-
-## 平台适配
-
-完整支持平台：`aiocqhttp`、`qq_official`、`telegram`、`kook`、`discord`、`weixin_oc`。
-受限支持（仅文本，媒体通道按平台能力降级）：`dingtalk`、`lark`（钉钉/飞书适配器不支持语音/文件/视频出站，飞书图片可用）。
-
-| 平台 | 文本/图片/卡片 | 语音 | 文件 | 视频 (MV) | 原生/自定义音乐卡 |
-|---|---|---|---|---|---|
-| QQ 个人号 (aiocqhttp) | ✅ | ✅ | ✅ | ✅ | ✅（`call_action` 直发 music 段） |
-| QQ 官方 (qq_official) | ✅ | ✅（silk 转码，失败回退文件） | ✅（>10MB 自动分片上传，需 AstrBot ≥4.27.3） | ✅（落盘发送，卡片与视频合并省额度） | ❌ |
-| 微信个人号 (weixin_oc) | ✅ | ❌ | ✅ | ✅ | ❌ |
-| Telegram | ✅ | ✅ | ✅ | ✅ | ❌ |
-| 飞书 (lark) | ✅ | ❌ | ❌ | ❌ | ❌ |
-| 钉钉 (dingtalk) | ✅（图片仅 http 链接，本地卡片图不可用） | ❌ | ❌ | ❌ | ❌ |
-| KOOK | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Discord | ✅ | ✅ | ✅ | ✅ | ❌ |
-
-- 视频（MV）发送降级链：`Video.fromURL` 直发 → 失败落盘发**下载文件**（`File`，全平台支持）→ `Video` 组件重试 → 链接文本；下载命令直接发文件；受限平台跳过 URL 直发。`aiocqhttp` 下文件发送失败时改走 base64 直发（跨容器 `file://` 不可见），不再用同一套 File 组件重试。
-- 原生/自定义音乐卡通过 OneBot `call_action` 直发 `music` 消息段（OneBot 侧不存在 `send_api`），仅 `aiocqhttp` 可用；其余平台自动跳过。
-- `aiocqhttp` 语音不走插件侧 silk 转码：插件把紧凑 mp3 以 OneBot v11 标准 `record` 段（base64）直发，由协议端（NapCat / SnowLuma 等）自带 ffmpeg 转 Tencent silk，时长按原始音频精确探测。
-- `aiocqhttp`（NapCat/LLOneBot 等 NTQQ 系）群文件对 `.flac` 常报「未知文件类型或路径不存在」，自动优先传压缩 mp3（`_压缩版.mp3`）；其余平台群文件保留原始高音质文件。
-- `qq_official` 为被动回复受限平台：文案与首个媒体合并发送以省被动回复额度，语音失败自动回退文件；**大文件（>10MB）自动走 QQ 分片文件上传**（需 AstrBot ≥4.27.3，管理面板 `qqofficialChunkedUpload` 可关；关闭后大文件回退压缩 mp3 兜底）。
-- `weixin_oc`（微信个人号）出站不支持语音，自动跳过语音只发文件。
-- 卡片渲染为本地 Playwright，各平台均以图片形式发送。
-
----
-
-## 目录结构
-
-```text
-astrbot_plugin_qqmusic/
-├── main.py                  # 插件生命周期入口与路由绑定
-├── __init__.py              # 顶层包入口
-├── metadata.yaml            # 插件元信息（v2.0.4）
-├── _conf_schema.json        # 配置定义 Schema
-├── README.md                # 插件文档
-├── CHANGELOG.md             # 更新日志
-├── requirements.txt         # Python 依赖
-├── core/                    # 核心业务服务层
-│   ├── __init__.py          # 包说明（不在包级再导出，避免导入即拉整条依赖链）
-│   ├── service.py           # 门面/组合根：保留全部公开签名并薄委托（实现见下列各模块）
-│   ├── login.py             # 扫码登录：两条二维码通道（App/MQTT、无感 webqr）+ 一套轮询骨架
-│   ├── resolve.py           # 分享卡片/链接解析流程（卡片→短链→专辑/歌单/歌手/单曲→投递）
-│   ├── panels.py            # 状态卡/设置卡数据与脱敏展示（uin/key/登录方式/平台名）
-│   ├── utils.py             # 跨模块通用小工具（safe_int；无内部依赖，避免循环导入）
-│   ├── api/                 # qqmusic-api 客户端包（_core HTTP 会话与鉴权 + 按域端点模块）
-│   ├── cards.py             # 会话存储（SessionStore）/ 卡片数据构造 / API 地址脱敏与文本兜底
-│   ├── messages.py          # 用户可见文案常量（跨文件重复使用的提示语）
-│   ├── delivery.py          # 音频下载与多平台分发（含 aiocqhttp/QQ 官方专用发送通道）
-│   ├── quality.py           # 音质常量与标签映射
-│   ├── render.py            # Playwright HTML 渲染引擎
-├── handlers/                # 声明式指令路由层（按领域解耦）
-│   ├── __init__.py          # 聚合导出 ALL_ROUTES
-│   ├── base.py              # 声明式 Route 基类与 AstrBot 精准匹配安装器
-│   ├── play_cmds.py         # 播放类指令（点歌/听N/连播/播放）
-│   ├── explore_cmds.py      # 探索与榜单指令（排行/新歌/MV/推荐/电台/日推/歌手/专辑/歌单等）
-│   ├── detail_cmds.py       # 详情指令（歌词/评论/收藏）
-│   ├── auth_cmds.py         # 登录指令（扫码登录/WebQR/DeepLink/状态/登出/账号）
-│   ├── system_cmds.py       # 系统与设置指令（帮助/设置/音质/API/开关/测试）
-│   └── share_cmds.py        # 链接、小程序与卡片分享解析（EventMessageType.ALL）
-└── resources/               # HTML/CSS 渲染卡片与静态资源
-```
-
----
-
-## ⚙️ 配置项
-
-在 AstrBot 管理面板「插件配置」中可改（多数项改完即时生效；`quality` 与开关类指令也可用命令改）：
-
-| 配置项 | 类型 | 默认 | 说明 |
-| --- | --- | --- | --- |
-| `apiBase` | string | `""`（**必填**） | 后端 API 地址，如 `http://127.0.0.1:3300` |
-| `apiToken` | string | `""` | 与 API 端 `QQMUSIC_API_TOKEN` 一致，不一致会被鉴权拒绝 |
-| `enable` | bool | `true` | 插件总开关：关闭后点歌/播放/歌词/榜单/解析/登录不再响应；`#qqm热搜`/`#qqm帮助` 与配置类指令保留 |
-| `enableSongRequest` | bool | `true` | 点歌功能开关 |
-| `enableResolve` | bool | `true` | 分享/链接自动解析总开关 |
-| `resolveCards` | bool | `true` | 自动解析 QQ 音乐分享卡片 |
-| `resolveLinks` | bool | `true` | 自动解析 y.qq.com 链接 |
-| `maxList` | int | `10` | 点歌列表最大显示条数（1-20） |
-| `quality` | string | `auto` | 最高播放音质：`auto/128/m4a/320/flac/ape/hires/atmos/master/atmos_master` |
-| `qualityFallback` | bool | `true` | 音质自动降级（逐级降档直至拿到可用链接） |
-| `sendNativeCard` | bool | `false` | 发送 OneBot 原生音乐卡片（部分协议支持） |
-| `sendCustomCard` | bool | `false` | 发送自定义音乐卡片（部分协议支持） |
-| `sendVocal` | bool | `true` | 以语音消息方式发送音频 |
-| `disableHighQualityVocal` | bool | `false` | 禁用高清语音（PC QQ 播放不了高清语音时开启；仅影响语音） |
-| `uploadFile` | bool | `true` | 以群/好友文件方式发送音频 |
-| `downloadTimeout` | int | `120000` | 音频/视频下载超时（毫秒） |
-| `keepFileSec` | int | `60` | 临时文件保留秒数（下限 5 秒；`0` 表示尽快删除） |
-| `identifyPrefix` | string | `识别：` | 识别提示前缀 |
-| `qrLoginEnable` | bool | `true` | 允许使用 `#qqm登录` 扫码登录命令 |
-| `qqofficialAdapt` | bool | `true` | QQ 官方机器人专用适配（合并消息、语音回退文件、跳过原生卡） |
-| `qqofficialChunkedUpload` | bool | `true` | QQ 官方大文件分片上传（需 AstrBot ≥ 4.27.3） |
-| `renderListCard` | bool | `true` | 将点歌/列表结果渲染为图片卡片（关闭则纯文本） |
-| `sendTextInfo` | bool | `true` | 投递音频时附带文本信息（歌名/歌手/音质） |
-
-> 临时文件（音频/卡片图/二维码）固定存放在 `data/plugin_data/astrbot_plugin_qqmusic/temp`，
-> 不再提供 `tempDir` 配置项——插件目录会在更新/重装时被整体替换。
-
-## 免责声明
-
-本项目仅供技术学习与交流使用。不提供任何音源服务，API 由用户自行解决；使用者应遵守所在地区法律法规及相关平台用户协议；因使用本项目产生的一切后果由使用者自行承担。
-
----
-
-## License
-
-本项目采用 [MIT](LICENSE) 许可证开源。
-
----
-
-<div align="center">
-
-本插件已停止维护。如果觉得新的聚合插件对你有帮助，欢迎给 [astrbot_plugin_music_hub](https://github.com/wbndmqaq/astrbot_plugin_music_hub) 点个 Star
-
-</div>
-
+发版时，在 [CHANGELOG.md](CHANGELOG.md) 增加 `## vX.Y.Z` 版本标题和简要变更，并同步 [metadata.yaml](metadata.yaml) 的版本号与功能描述。运行 `python scripts/package_astrbot.py` 校验后生成安装包。

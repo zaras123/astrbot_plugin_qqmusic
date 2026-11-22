@@ -1,31 +1,30 @@
 name: astrbot_plugin_qqmusic
 display_name: "QQ音乐点歌/解析插件"
-short_desc: QQ音乐点歌、MV、排行榜、解析、扫码登录
+short_desc: 多音源点歌、歌词、MV、演出票务，支持本地图卡。
 desc: |
-  从 Yunzai qqmusic-plugin 移植而来的 AstrBot 版本。
-  支持点歌、歌词、热搜、MV 搜索/播放/下载（点歌卡 🎬 徽标）、排行榜、新歌速递、
-  推荐、电台、日推、收藏、歌手/专辑/歌单/评论、QQ 音乐分享卡片与链接自动解析、
-  webqr 扫码登录、音质自适配降级、语音/群文件/视频发送、QQ官方大文件分片上传（AstrBot ≥4.27.3）。
-  需配合后端API使用（API 由用户自行解决）。
-version: 2.0.4
-author: wbndm
-social_link: https://github.com/wbndmqaq
-repo: https://github.com/wbndmqaq/astrbot_plugin_qqmusic
-astrbot_version: ">=4.16,<5"
+  对接 qqmusic-api-enhanced，支持多音源点歌、歌词、MV、音乐分享解析、演出票务和定时点歌。
+  内置中文卡片渲染，无需浏览器；语音、视频与文件按适配器能力投递。
+version: v2.1.18
+author: zaras123
+repo: https://github.com/zaras123/astrbot_plugin_qqmusic
+astrbot_version: ">=4.29.4,<5"
 support_platforms:
   - aiocqhttp
   - qq_official
+  - qq_official_webhook
   - telegram
   - dingtalk
   - lark
   - kook
   - discord
   - weixin_oc
-category: 工具
-tags:
-  - QQ音乐
-  - 音乐
-  - 点歌
-  - 音频
-  - 解析
-  - qqmusic
+  - weixin_official_account
+  - wecom
+  - wecom_ai_bot
+  - line
+  - mattermost
+  - misskey
+  - satori
+  - slack
+  - webchat
+  - icqq
