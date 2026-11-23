@@ -15,6 +15,7 @@
 - AstrBot 26 项单元测试通过（新增 API 设置保存、icqq 群对象解析用例）。
 - Yunzai WebUI/多适配器/票务/统计/勋章/语音等脚本全部通过；Karin `npm test` 通过。
 - WebUI 静态文件与 Yunzai/Karin 逐字节一致（仅 AstrBot 的 bridge 与 sandbox localStorage 回退不同）。
+- 发行包字体精简为 GB2312 + Big5 常用字子集（约 9988 字），ZIP 从 21.4MB 降到 12.8MB，满足插件市场 16 MiB 限制；Yunzai/Karin 保持完整 GBK 字体。
 - 发行 ZIP 110 项，真实框架加载、帮助分发与热重载通过。
 
 ## v2.1.20
