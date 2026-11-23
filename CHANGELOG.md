@@ -2,6 +2,34 @@
 
 这里只记录 AstrBot 分支的版本；Karin 与 Yunzai 的历史不计入。
 
+## v2.1.20
+
+与 Yunzai / Karin 版本对齐到 2.1.20，完成统一 WebUI 与卡片主题的收尾。
+
+**本地曲库 WebUI**
+
+- 「本地曲库点歌」页与 Yunzai / Karin 使用同一套 HTML/CSS/JS、同一套 logo 与主题，AstrBot 只保留原生 bridge 接入。
+- 右上角「插件设置」只配置 API 地址与 Token；未配置 Token 时搜索与发送返回 `TOKEN_REQUIRED`，不会请求 API 本地曲库。
+- 群列表按当前在线适配器分组（`适配器|账号|群号`），没有群列表接口的适配器提供手动群号入口。
+- 修复插件视图 iframe 处于 sandbox、无法访问 `localStorage` 时页面初始化中断；主题与任务记忆改为内存回退。
+
+**卡片主题**
+
+- 补齐 `poster` / `ticket` / `medal` / `listening` / `platform` / `platforms` / `guide` 模板与 `shared/ticket` 片段；list、lyric、poster、detail、hot、help、status、settings、comment 全部走同一套 Chromium 主题。
+- 渲染参数与 Yunzai 一致：同宽视口、3x DPR、超过像素预算降 2x、`.page/.card` 元素截图、不透明导出。
+- 缺少 Playwright / Chromium 时仍回退 Pillow，不影响出图。
+
+**修复**
+
+- 歌词卡片改为 snake_case 传参，修复 `#qqm歌词` 报 `build_lyric_card_data() unexpected keyword`。
+- 恢复 OneBot 文件发送失败后的 `upload_group_file` / `upload_private_file` 降级。
+- 打包脚本补入 `views/library`（bridge / settings / logo）与 `resources/`，市场 ZIP 不再缺资源。
+- README 安装目录名、插件标识与数据目录统一为 `astrbot_plugin_qqmusic_ref`。
+
+**验证**
+
+- 24 项单元测试通过；发行 ZIP 真实框架冒烟：SDK 4.29.4 加载、帮助分发、热重载通过，38 个 handler。
+
 ## v2.1.19
 
 统一 WebUI 与插件标识修正。
