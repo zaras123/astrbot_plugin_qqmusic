@@ -455,7 +455,7 @@ class AstrBotTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotEqual(rendered[0], rendered[1])
         for path in rendered:
             self.assertTrue(Path(path).read_bytes().startswith(b"\xff\xd8\xff"))
-        help_data = main.cardlib.build_help_card_data(self.config, "2.1.18")
+        help_data = main.cardlib.build_help_card_data(self.config, "2.1.19")
         path = await self.star._render_card(e, help_data, "qqmusic-help")
         self.assertTrue(path and Path(path).stat().st_size > 4096)
         with PillowImage.open(path) as preview:
@@ -481,8 +481,11 @@ class AstrBotTests(unittest.IsolatedAsyncioTestCase):
         for path in results:
             with PillowImage.open(path) as im:
                 self.assertEqual(im.format, "PNG")
-                self.assertEqual(im.width, 960)
+                # HTML 主题卡片按 3x DPR 截图（Pillow 回退为 960 宽）
+                self.assertGreaterEqual(im.width, 960)
+                self.assertEqual(im.width % 3, 0)
                 self.assertLessEqual(im.height, 4800)
+                self.assertLessEqual(im.width * im.height, 8_000_000)
                 im.verify()
         self.config["uiDark"] = "深色"
         path = await self.star._render_card(e, shapes["detail"], "qqmusic-detail")

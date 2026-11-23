@@ -486,6 +486,7 @@ class QQMusicPlugin(FeatureCommands, Star):
             payplay=bool(song.get("payplay")),
             source=source,
             has_url=bool(play.get("url")),
+            mv_vid=mv_vid,
         )
         card_data["tip"] = (
             f"正在下载并发送语音（{q_label or '默认音质'}）..."
@@ -561,7 +562,7 @@ class QQMusicPlugin(FeatureCommands, Star):
                 event.stop_event()
                 return
             card = cardlib.build_lyric_card_data(
-                song_name=song_meta.get("songName") or "未知",
+                song_name=song_meta.get("songName") or key,
                 singer_name=song_meta.get("singerName") or "",
                 cover=song_meta.get("cover") or "",
                 album_name=song_meta.get("albumName") or "",
@@ -2665,7 +2666,7 @@ class QQMusicPlugin(FeatureCommands, Star):
             if not nickname:
                 nickname = f"用户 {self._mask_uin(uin)}"
         else:
-            avatar_url = os.path.join(PLUGIN_DIR, "resources", "img", "logo.png")
+            avatar_url = cardlib.logo_url()
 
         vip_title = "普通用户"
         vip_state_text = "未开通 / 未检测"
@@ -3022,6 +3023,7 @@ class QQMusicPlugin(FeatureCommands, Star):
         return {
             "title": "QQ音乐设置",
             "subtitle": "当前插件运行配置一览",
+            "tip": "修改配置后重新发送 #qqm设置 即可看到变化；卡片主题可在配置页切换。",
             "apiBase": api_base_view,
             "apiHint": api_hint,
             "quality": quality_label,

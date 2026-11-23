@@ -27,6 +27,8 @@ if NAME not in sys.modules:
 
 library_web = importlib.import_module(f"{NAME}.library_web")
 
+render = importlib.import_module(f"{NAME}.render")
+
 
 class LibraryWebTests(unittest.IsolatedAsyncioTestCase):
     async def test_register_routes(self):
@@ -43,25 +45,22 @@ class LibraryWebTests(unittest.IsolatedAsyncioTestCase):
             [route for route, _, _ in context.routes],
             [
                 f"/{library_web.PLUGIN_NAME}/library/groups",
-                f"/{library_web.PLUGIN_NAME}/library/theme",
                 f"/{library_web.PLUGIN_NAME}/library/search",
                 f"/{library_web.PLUGIN_NAME}/library/send",
                 f"/{library_web.PLUGIN_NAME}/library/job",
+                f"/{library_web.PLUGIN_NAME}/library/api-config",
             ],
         )
 
-    async def test_web_palette_matches_card_theme(self):
-        light = library_web.qqrender.web_palette({"uiTheme": "classic", "uiDark": "浅色"})
-        self.assertFalse(light["dark"])
-        self.assertEqual(light["brand"], "#0f8f63")
-        self.assertEqual(light["style"], "classic")
-        dark = library_web.qqrender.web_palette({"uiTheme": "apple", "uiDark": "深色"})
-        self.assertTrue(dark["dark"])
-        self.assertEqual(dark["brand"], "#2997ff")
-        self.assertEqual(dark["style"], "apple")
-        fallback = library_web.qqrender.web_palette({"uiTheme": "missing", "uiDark": "浅色"})
-        self.assertEqual(fallback["theme"], "classic")
-        self.assertEqual(fallback["brand"], "#0f8f63")
+    async def test_card_palette_follows_theme_config(self):
+        classic = render._palette({"uiTheme": "classic", "uiDark": "浅色"})
+        self.assertEqual(classic[0], "#d9f7e9")
+        self.assertEqual(classic[2], "#087756")
+        apple_dark = render._palette({"uiTheme": "apple", "uiDark": "深色"})
+        self.assertEqual(apple_dark[0], "#151e2b")
+        self.assertEqual(apple_dark[2], "#ff8bb8")
+        fallback = render._palette({"uiTheme": "missing", "uiDark": "浅色"})
+        self.assertEqual(fallback[0], "#d9f7e9")
 
     async def test_public_item_and_targets(self):
         item = library_web._public_item({

@@ -1,10 +1,12 @@
 name: astrbot_plugin_qqmusic_ref
 display_name: "QQ音乐点歌/解析插件"
-short_desc: 多音源点歌、歌词、MV、演出票务，支持本地图卡。
+short_desc: 本地曲库 WebUI 点歌并发送到群，支持多音源点歌、歌词、MV 与演出票务。
 desc: |
   对接 qqmusic-api-enhanced，支持多音源点歌、歌词、MV、音乐分享解析、演出票务和定时点歌。
-  内置中文卡片渲染，无需浏览器；语音、视频与文件按适配器能力投递。
-version: v2.1.18
+  内置统一 WebUI「本地曲库」页：检索 API 本地曲库、按适配器选择群、批量发送并查看每个群的结果；
+  API 地址与 Token 在插件设置页配置，未配置 Token 时不会请求曲库。
+  卡片复用 Yunzai / Karin 的同一套主题（classic / apple / nebula / multi），无需浏览器时自动回退 Pillow。
+version: v2.1.19
 author: zaras123
 repo: https://github.com/zaras123/astrbot_plugin_qqmusic_ref
 astrbot_version: ">=4.29.4,<5"
